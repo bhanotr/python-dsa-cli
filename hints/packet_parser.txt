@@ -1,0 +1,123 @@
+=== HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- parse_packet(): Use string splitting with '|' to separate two main parts, then use ':' to split further
+- is_valid_ip(): Split on '.', convert each part to integer, check range 0-255
+- get_packet_size(): Parse the packet and return len(payload)
+
+Key string methods:
+- str.split(delimiter) - splits string into list
+- len(string) - gets string length
+- str.isdigit() - checks if string is numeric
+
+Example:
+```python
+parts = "a|b".split('|')  # ['a', 'b']
+source, dest = parts[0].split(':')  # ['a', 'b'] -> 'a', 'b'
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for parse_packet():
+1. Check if packet is empty, return None
+2. Split by '|' - should get 2 parts
+3. Split first part by ':' - should get source and destination
+4. Split second part by ':' - should get type and payload
+5. Return dict if all parts present, else None
+
+Detailed approach for is_valid_ip():
+1. Split IP by '.', should get exactly 4 parts
+2. For each part:
+   - Check if it's not empty
+   - Check if it's a valid number (use isdigit() or try/except)
+   - Convert to int and check if 0 <= value <= 255
+
+Detailed approach for get_packet_size():
+1. Call parse_packet()
+2. If result is None, return 0
+3. Return len(result['payload'])
+
+Edge cases:
+- Empty strings
+- Missing delimiters
+- Non-numeric parts in IP
+- Extra delimiters
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for parse_packet():
+```python
+def parse_packet(packet: str) -> dict | None:
+    if not packet:
+        return None
+    
+    # Split main parts
+    parts = packet.split('|')
+    if len(parts) != 2:
+        return None
+    
+    # Split source:destination
+    source_dest = parts[0].split(':')
+    if len(source_dest) != 2:
+        return None
+    
+    # Split type:payload
+    type_payload = parts[1].split(':')
+    if len(type_payload) != 2:
+        return None
+    
+    return {
+        'source': source_dest[0],
+        'destination': source_dest[1],
+        'packet_type': type_payload[0],
+        'payload': type_payload[1]
+    }
+```
+
+Complete solution for is_valid_ip():
+```python
+def is_valid_ip(ip: str) -> bool:
+    parts = ip.split('.')
+    
+    # Must have exactly 4 parts
+    if len(parts) != 4:
+        return False
+    
+    for part in parts:
+        # Must not be empty
+        if not part:
+            return False
+        
+        # Must be numeric
+        if not part.isdigit():
+            return False
+        
+        # Must be in range 0-255
+        value = int(part)
+        if value < 0 or value > 255:
+            return False
+    
+    return True
+```
+
+Complete solution for get_packet_size():
+```python
+def get_packet_size(packet: str) -> int:
+    parsed = parse_packet(packet)
+    if parsed is None:
+        return 0
+    return len(parsed['payload'])
+```
+
+Time complexity:
+- parse_packet: O(n) where n is packet length
+- is_valid_ip: O(1) - fixed number of operations
+- get_packet_size: O(n) - depends on parse_packet
+
+Space complexity: O(n) - creating new strings/objects

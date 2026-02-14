@@ -1,0 +1,79 @@
+=== HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Sort intervals by start time
+- Iterate and merge overlapping intervals
+- Track last merged interval
+
+Key concept:
+- Sort by start time
+- Overlap condition: current[0] <= last[1]
+- Merge: last[1] = max(last[1], current[1])
+
+Sorting:
+```python
+intervals.sort(key=lambda x: x[0])
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for merge():
+1. Sort intervals by start time
+2. Initialize merged list with first interval
+3. For each remaining interval:
+   a. Get last interval in merged
+   b. If no overlap (current[0] > last[1]): add to merged
+   c. If overlap: merge (last[1] = max(last[1], current[1]))
+4. Return merged list
+
+Example:
+```python
+intervals = [[1, 3], [2, 6], [8, 10]]
+sorted = [[1, 3], [2, 6], [8, 10]]
+
+merged = [[1, 3]]
+[2, 6]: 2 <= 3, overlap! Merge: [[1, 6]]
+[8, 10]: 8 > 6, no overlap: [[1, 6], [8, 10]]
+```
+
+Accessing last element:
+```python
+merged[-1]  # Last interval in list
+```
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution:
+```python
+from typing import List
+
+def merge(intervals: List[List[int]]) -> List[List[int]]:
+    if not intervals:
+        return []
+    
+    # Sort by start time
+    intervals.sort(key=lambda x: x[0])
+    
+    merged = [intervals[0]]
+    
+    for interval in intervals[1:]:
+        last = merged[-1]
+        
+        if interval[0] <= last[1]:
+            # Overlap, merge
+            last[1] = max(last[1], interval[1])
+        else:
+            # No overlap, add new interval
+            merged.append(interval)
+    
+    return merged
+```
+
+Time complexity: O(n log n) - Sorting dominates
+Space complexity: O(n) - Store merged intervals

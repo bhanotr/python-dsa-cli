@@ -1,0 +1,149 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use binary search for O(log n) lookup
+- Logs are sorted by timestamp
+- For first: when match found, continue searching left
+- For last: when match found, continue searching right
+- For range: find lower bound and upper bound
+
+Key concepts:
+- Binary search: repeatedly divide search space
+- First occurrence: keep left pointer when match found
+- Last occurrence: keep right pointer when match found
+- Range: find first >= start, then first > end
+
+Example binary search:
+```python
+left, right = 0, len(logs) - 1
+while left <= right:
+    mid = (left + right) // 2
+    if logs[mid][0] == target:
+        return mid
+    elif logs[mid][0] < target:
+        left = mid + 1
+    else:
+        right = mid - 1
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for find_first_log:
+1. Initialize left = 0, right = len(logs) - 1
+2. Initialize result = None
+3. While left <= right:
+   a. mid = (left + right) // 2
+   b. If logs[mid][0] == timestamp:
+      - Store result = mid
+      - Continue searching left: right = mid - 1
+   c. If logs[mid][0] < timestamp: left = mid + 1
+   d. If logs[mid][0] > timestamp: right = mid - 1
+4. Return result
+
+Detailed approach for find_last_log:
+- Similar to find_first_log
+- When match found: store result, search right (left = mid + 1)
+
+Detailed approach for find_log_range:
+1. Find first index with timestamp >= start_ts
+   - Binary search for lower bound
+2. Find last index with timestamp <= end_ts
+   - Binary search for upper bound
+3. Return logs[first:last+1]
+
+Edge cases:
+- Empty logs
+- Timestamp not found
+- All same timestamp
+- Range outside log range
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for find_first_log:
+```python
+def find_first_log(logs: List[Tuple[int, str]], timestamp: int) -> Optional[int]:
+    if not logs:
+        return None
+    
+    left, right = 0, len(logs) - 1
+    result = None
+    
+    while left <= right:
+        mid = (left + right) // 2
+        if logs[mid][0] == timestamp:
+            result = mid
+            right = mid - 1  # Continue searching left
+        elif logs[mid][0] < timestamp:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return result
+```
+
+Complete solution for find_last_log:
+```python
+def find_last_log(logs: List[Tuple[int, str]], timestamp: int) -> Optional[int]:
+    if not logs:
+        return None
+    
+    left, right = 0, len(logs) - 1
+    result = None
+    
+    while left <= right:
+        mid = (left + right) // 2
+        if logs[mid][0] == timestamp:
+            result = mid
+            left = mid + 1  # Continue searching right
+        elif logs[mid][0] < timestamp:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return result
+```
+
+Complete solution for find_log_range:
+```python
+def find_log_range(logs: List[Tuple[int, str]], start_ts: int, end_ts: int) -> List[Tuple[int, str]]:
+    if not logs:
+        return []
+    
+    # Find first index with timestamp >= start_ts
+    left, right = 0, len(logs)
+    while left < right:
+        mid = (left + right) // 2
+        if logs[mid][0] < start_ts:
+            left = mid + 1
+        else:
+            right = mid
+    
+    first = left
+    
+    # Find first index with timestamp > end_ts
+    left, right = 0, len(logs)
+    while left < right:
+        mid = (left + right) // 2
+        if logs[mid][0] <= end_ts:
+            left = mid + 1
+        else:
+            right = mid
+    
+    last = left - 1
+    
+    if first > last:
+        return []
+    
+    return logs[first:last + 1]
+```
+
+Time complexity: O(log n) for all operations
+Space complexity: O(1)
+
+Binary search reduces search space by half each iteration, achieving logarithmic time complexity.

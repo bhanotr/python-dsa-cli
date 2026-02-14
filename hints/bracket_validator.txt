@@ -1,0 +1,132 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use a stack (list) to track opening brackets
+- Define a mapping of closing brackets to opening brackets
+- For each character:
+  - If opening bracket, push to stack
+  - If closing bracket, check if stack top matches
+- At the end, stack should be empty for valid config
+
+Key stack operations:
+- stack.append(item) - push item
+- stack.pop() - pop top item
+- stack[-1] - peek at top item
+- len(stack) - check if empty
+
+Example:
+```python
+stack = []
+pairs = {')': '(', ']': '[', '}': '{'}
+for char in config:
+    if char in '([{':
+        stack.append(char)
+    elif char in ')]}':
+        if not stack or stack[-1] != pairs[char]:
+            return False
+        stack.pop()
+return len(stack) == 0
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for is_valid_config():
+1. Create empty list as stack
+2. Define pairs dict: ')': '(', ']': '[', '}': '{'
+3. Define opening brackets set: '([{'
+4. Define closing brackets set: ')]}'
+5. Iterate through each character:
+   a. If char is opening bracket, push to stack
+   b. If char is closing bracket:
+      - Check if stack is empty (return False)
+      - Check if stack top matches (return False if not)
+      - Pop from stack
+6. Return True if stack is empty, else False
+
+Detailed approach for get_invalid_position():
+1. Similar to is_valid_config, but track position
+2. Store positions along with opening brackets in stack
+3. When error found, return current position
+4. If stack not empty at end, return position of first unclosed
+5. Return -1 if valid
+
+Detailed approach for get_matching_pairs():
+1. Use stack of tuples: (bracket, position)
+2. When matching pair found, record positions
+3. Return list of (open_pos, close_pos) tuples
+
+Edge cases:
+- Empty string should return True and -1
+- Only opening brackets
+- Only closing brackets
+- Nested vs interleaved brackets
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for is_valid_config:
+```python
+def is_valid_config(config: str) -> bool:
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    
+    for char in config:
+        if char in '([{':
+            stack.append(char)
+        elif char in ')]}':
+            if not stack or stack[-1] != pairs[char]:
+                return False
+            stack.pop()
+    
+    return len(stack) == 0
+```
+
+Complete solution for get_invalid_position:
+```python
+def get_invalid_position(config: str) -> int:
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    
+    for pos, char in enumerate(config):
+        if char in '([{':
+            stack.append((char, pos))
+        elif char in ')]}':
+            if not stack:
+                return pos
+            if stack[-1][0] != pairs[char]:
+                return pos
+            stack.pop()
+    
+    return stack[0][1] if stack else -1
+```
+
+Complete solution for get_matching_pairs:
+```python
+def get_matching_pairs(config: str) -> List[tuple[int, int]]:
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    result = []
+    
+    for pos, char in enumerate(config):
+        if char in '([{':
+            stack.append((char, pos))
+        elif char in ')]}':
+            if not stack or stack[-1][0] != pairs[char]:
+                return []
+            open_pos = stack.pop()[1]
+            result.append((open_pos, pos))
+    
+    return result if not stack else []
+```
+
+Time complexity:
+- is_valid_config: O(n) - single pass
+- get_invalid_position: O(n) - single pass
+- get_matching_pairs: O(n) - single pass
+
+Space complexity: O(n) - worst case all opening brackets on stack

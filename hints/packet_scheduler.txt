@@ -1,0 +1,114 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use heapq (min-heap) for priority queue
+- Store tuples: (-priority, counter, packet)
+- Negative priority for max-heap behavior
+- Counter ensures FIFO for same priority
+- Higher priority = smaller negative number = pops first
+
+Key concepts:
+- heapq.heappush(heap, item) - Add to heap
+- heapq.heappop(heap) - Remove min item
+- heap[0] - Peek at min item
+- Use tuple comparison: (-priority, counter, packet)
+
+Example:
+```python
+import heapq
+heap = []
+heapq.heappush(heap, (-3, 0, "high priority"))
+heapq.heappush(heap, (-1, 1, "low priority"))
+packet = heapq.heappop(heap)[2]  # "high priority"
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for __init__:
+1. Initialize empty list for heap
+2. Initialize counter to 0
+
+Detailed approach for enqueue(packet, priority):
+1. Get current counter value
+2. Increment counter
+3. Push (-priority, counter, packet) to heap
+4. Use heapq.heappush
+
+Detailed approach for dequeue():
+1. Check if heap is empty (return None)
+2. Pop from heap using heapq.heappop
+3. Return packet (third element of tuple)
+
+Detailed approach for peek():
+1. Check if heap is empty (return None)
+2. Return packet at index 0 (third element)
+
+Detailed approach for is_empty():
+- Return len(heap) == 0
+
+Detailed approach for size():
+- Return len(heap)
+
+Edge cases:
+- Empty scheduler
+- Same priority packets
+- Dequeue from empty
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for __init__:
+```python
+def __init__(self):
+    self.heap = []
+    self.counter = 0
+```
+
+Complete solution for enqueue:
+```python
+def enqueue(self, packet: str, priority: int) -> None:
+    heapq.heappush(self.heap, (-priority, self.counter, packet))
+    self.counter += 1
+```
+
+Complete solution for dequeue:
+```python
+def dequeue(self) -> Optional[str]:
+    if not self.heap:
+        return None
+    return heapq.heappop(self.heap)[2]
+```
+
+Complete solution for peek:
+```python
+def peek(self) -> Optional[str]:
+    if not self.heap:
+        return None
+    return self.heap[0][2]
+```
+
+Complete solution for is_empty:
+```python
+def is_empty(self) -> bool:
+    return len(self.heap) == 0
+```
+
+Complete solution for size:
+```python
+def size(self) -> int:
+    return len(self.heap)
+```
+
+Time complexity:
+- enqueue: O(log n) - heap insertion
+- dequeue: O(log n) - heap removal
+- peek: O(1)
+- is_empty: O(1)
+- size: O(1)
+
+Space complexity: O(n) - stores all packets

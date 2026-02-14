@@ -1,0 +1,140 @@
+=== HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- FlowNode: Simple class with destination, bandwidth, and next attributes
+- append_flow: Create node, traverse to end, add node
+- find_flow: Traverse list, check each node's destination
+- remove_flow: Handle special case (head), then traverse and remove
+- get_total_bandwidth: Traverse and sum bandwidths
+- reverse_flows: Use three pointers (prev, current, next_node)
+
+Key patterns:
+```python
+# Node class
+class FlowNode:
+    def __init__(self, destination, bandwidth):
+        self.destination = destination
+        self.bandwidth = bandwidth
+        self.next = None
+
+# Traversal
+current = head
+while current:
+    # Process
+    current = current.next
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for append_flow():
+1. Create new FlowNode
+2. If head is None, return new node
+3. Otherwise, traverse to last node (current.next is None)
+4. Set last node's next to new node
+5. Return head
+
+Detailed approach for find_flow():
+1. Start at head
+2. While current is not None:
+   - If current.destination == destination, return current
+   - Move to next node
+3. Return None if not found
+
+Detailed approach for remove_flow():
+1. If head is None, return None
+2. If head is the one to remove, return head.next
+3. Otherwise, traverse with prev pointer:
+   - If prev.next is the one to remove, bypass it
+4. Return head
+
+Detailed approach for reverse_flows():
+1. Initialize prev = None, current = head
+2. While current is not None:
+   - Save next_node = current.next
+   - current.next = prev (reverse link)
+   - prev = current
+   - current = next_node
+3. Return prev (new head)
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete append_flow():
+```python
+def append_flow(head, destination, bandwidth):
+    new_node = FlowNode(destination, bandwidth)
+    
+    if head is None:
+        return new_node
+    
+    current = head
+    while current.next:
+        current = current.next
+    
+    current.next = new_node
+    return head
+```
+
+Complete find_flow():
+```python
+def find_flow(head, destination):
+    current = head
+    while current:
+        if current.destination == destination:
+            return current
+        current = current.next
+    return None
+```
+
+Complete remove_flow():
+```python
+def remove_flow(head, destination):
+    if head is None:
+        return None
+    
+    if head.destination == destination:
+        return head.next
+    
+    current = head
+    while current.next:
+        if current.next.destination == destination:
+            current.next = current.next.next
+            return head
+        current = current.next
+    
+    return head
+```
+
+Complete get_total_bandwidth():
+```python
+def get_total_bandwidth(head):
+    total = 0
+    current = head
+    while current:
+        total += current.bandwidth
+        current = current.next
+    return total
+```
+
+Complete reverse_flows():
+```python
+def reverse_flows(head):
+    prev = None
+    current = head
+    
+    while current:
+        next_node = current.next
+        current.next = prev
+        prev = current
+        current = next_node
+    
+    return prev
+```
+
+Time complexity: O(n) for all operations (except O(1) for node creation)
+Space complexity: O(1) for all operations

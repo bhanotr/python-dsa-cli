@@ -1,0 +1,85 @@
+=== HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use a hash set to track seen numbers
+- Iterate through the array
+- If number already in set, return True
+- If loop completes, return False
+
+Key concept:
+- Hash set for O(1) lookups
+- Early return when duplicate found
+
+Set operations:
+```python
+seen = set()
+seen.add(num)      # Add to set
+num in seen        # Check if exists (O(1))
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for contains_duplicate():
+1. Create empty set: seen = set()
+2. Iterate through each num in nums:
+   a. If num is in seen: return True
+   b. Add num to seen
+3. Return False at the end (no duplicates)
+
+Example:
+```python
+nums = [1, 2, 3, 1]
+
+1: not in seen, add it, seen = {1}
+2: not in seen, add it, seen = {1, 2}
+3: not in seen, add it, seen = {1, 2, 3}
+1: IS in seen! Return True
+```
+
+Why this is efficient:
+- O(1) average lookup time
+- Return as soon as duplicate found
+- Better than O(n²) nested loops
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution:
+```python
+from typing import List
+
+def contains_duplicate(nums: List[int]) -> bool:
+    seen = set()
+    
+    for num in nums:
+        if num in seen:
+            return True
+        seen.add(num)
+    
+    return False
+```
+
+Time complexity: O(n) average, O(n²) worst (rare)
+Space complexity: O(n) - Store up to n elements
+
+Alternative (one-liner):
+```python
+def contains_duplicate(nums: List[int]) -> bool:
+    return len(nums) != len(set(nums))
+```
+
+Alternative (sorting - slower):
+```python
+def contains_duplicate(nums: List[int]) -> bool:
+    nums.sort()
+    for i in range(len(nums) - 1):
+        if nums[i] == nums[i + 1]:
+            return True
+    return False
+```
+This is O(n log n) time, O(1) or O(n) space.

@@ -1,0 +1,96 @@
+=== HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use a hash map (dictionary) to store numbers and their indices
+- For each number, calculate the "complement" (target - number)
+- Check if complement exists in the hash map
+- If yes, you found the pair!
+
+Key concept:
+- Complement: The value we need to find to reach target
+- If we're looking for 9 and have 2, we need 7 (9 - 2 = 7)
+
+Hash map operations:
+```python
+# Create hash map
+seen = {}
+
+# Add to hash map
+seen[num] = index
+
+# Check if exists
+if complement in seen:
+    # Found it!
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for two_sum():
+1. Create empty hash map: seen = {}
+2. Iterate through nums with index:
+   - Calculate complement = target - num
+   - Check if complement is in seen
+   - If yes: return [seen[complement], current_index]
+   - If no: add {num: index} to seen and continue
+3. Loop will always find a solution (guaranteed)
+
+Why this works:
+- When we check complement, we've already seen all previous numbers
+- If complement exists in seen, we found two numbers that add to target
+- Hash map gives us O(1) lookup time
+
+Example:
+```python
+nums = [2, 7, 11, 15], target = 9
+
+i=0, num=2:
+  complement = 9 - 2 = 7
+  7 not in seen
+  seen = {2: 0}
+
+i=1, num=7:
+  complement = 9 - 7 = 2
+  2 IS in seen at index 0
+  Return [0, 1]
+```
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution:
+```python
+def two_sum(nums: List[int], target: int) -> List[int]:
+    seen = {}  # hash map to store {number: index}
+    
+    for i, num in enumerate(nums):
+        complement = target - num
+        
+        # Check if we've seen the complement
+        if complement in seen:
+            return [seen[complement], i]
+        
+        # Store current number and index
+        seen[num] = i
+    
+    # Solution guaranteed to exist
+    return []
+```
+
+Time complexity: O(n) - Single pass through array
+Space complexity: O(n) - Hash map stores up to n elements
+
+Alternative (brute force):
+```python
+# O(n²) time, O(1) space
+for i in range(len(nums)):
+    for j in range(i + 1, len(nums)):
+        if nums[i] + nums[j] == target:
+            return [i, j]
+```
+
+The hash map approach is much better for large arrays!

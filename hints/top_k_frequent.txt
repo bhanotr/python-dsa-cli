@@ -1,0 +1,82 @@
+=== HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use hash map to count frequency of each element
+- Sort elements by frequency (descending)
+- Return top k elements
+
+Key concept:
+- Frequency counting with hash map
+- Sorting by frequency in descending order
+
+Hash map counting:
+```python
+from collections import Counter
+count = Counter(nums)  # {element: frequency}
+```
+
+Getting top k:
+```python
+# Sort by frequency and take top k
+sorted_items = sorted(count.items(), key=lambda x: x[1], reverse=True)
+top_k = [item[0] for item in sorted_items[:k]]
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for top_k_frequent():
+1. Count frequencies using hash map or Counter
+2. Sort (element, frequency) pairs by frequency descending
+3. Return first k elements from sorted list
+
+Example:
+```python
+nums = [1, 1, 1, 2, 2, 3], k = 2
+count = {1: 3, 2: 2, 3: 1}
+sorted = [(1, 3), (2, 2), (3, 1)]
+top_k = [1, 2]
+```
+
+Sorting syntax:
+```python
+# Sort by frequency (index 1) descending
+sorted(count.items(), key=lambda x: x[1], reverse=True)
+```
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution:
+```python
+from typing import List
+from collections import Counter
+
+def top_k_frequent(nums: List[int], k: int) -> List[int]:
+    count = Counter(nums)
+    
+    # Sort by frequency and get top k
+    sorted_items = sorted(count.items(), key=lambda x: x[1], reverse=True)
+    
+    return [item[0] for item in sorted_items[:k]]
+```
+
+Time complexity: O(n + m log m) where n is len(nums), m is number of unique elements
+Space complexity: O(m) - Store unique elements in counter
+
+Alternative with heap (better when k << n):
+```python
+import heapq
+from collections import Counter
+
+def top_k_frequent(nums: List[int], k: int) -> List[int]:
+    count = Counter(nums)
+    
+    # Use min-heap of size k
+    return heapq.nlargest(k, count.keys(), key=count.get)
+```
+This is O(n + m log k) time.

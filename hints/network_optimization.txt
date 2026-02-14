@@ -1,0 +1,105 @@
+=== HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- This is a dynamic programming problem
+- We need to allocate bandwidth across network segments
+- Each segment has a capacity constraint
+- Find optimal allocation to maximize total throughput
+
+Key concepts:
+- DP state: dp[i] = max bandwidth for first i segments
+- Transition: For each segment, decide how much bandwidth to allocate
+- Think of it as resource allocation problem
+
+Similar to:
+- Knapsack problem
+- Partition problem
+- House Robber variations
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach:
+1. Define DP state:
+   - dp[i][b] = max throughput using first i segments with bandwidth b
+2. For each segment i:
+   - Try allocating 0 to min(capacity_i, remaining_bandwidth)
+   - Update DP state
+3. Use optimized space (1D DP array)
+4. Track allocation decisions for reconstruction
+
+Alternative simpler approach:
+- If segments can be selected independently:
+- This becomes easier - select segments that maximize throughput
+- Use simple DP or greedy
+
+Clarify requirements:
+- Are segments independent?
+- Is there a global capacity limit?
+- Do we need to allocate all bandwidth?
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution (simplified - independent segments):
+```python
+def optimize_bandwidth(segments: List[dict]) -> int:
+    """
+    segments = [{'capacity': int, 'throughput': int}, ...]
+    """
+    n = len(segments)
+    if n == 0:
+        return 0
+    
+    # Sort by capacity
+    segments.sort(key=lambda x: x['capacity'])
+    
+    # DP: dp[i] = max throughput using first i segments
+    dp = [0] * (n + 1)
+    
+    for i in range(1, n + 1):
+        seg = segments[i - 1]
+        dp[i] = dp[i - 1]  # Don't use this segment
+        
+        # Try using this segment
+        for j in range(i):
+            if segments[j]['capacity'] <= seg['capacity']:
+                dp[i] = max(dp[i], dp[j] + seg['throughput'])
+    
+    return dp[n]
+```
+
+Complete solution (with capacity constraint):
+```python
+def optimize_bandwidth(segments: List[dict], total_capacity: int) -> int:
+    """
+    segments = [{'capacity': int, 'throughput': int}, ...]
+    total_capacity = Total bandwidth available
+    """
+    n = len(segments)
+    
+    # DP: dp[i][b] = max throughput using first i segments with bandwidth b
+    dp = [[0] * (total_capacity + 1) for _ in range(n + 1)]
+    
+    for i in range(1, n + 1):
+        for b in range(total_capacity + 1):
+            # Don't use segment i
+            dp[i][b] = dp[i - 1][b]
+            
+            # Use segment i if possible
+            if segments[i - 1]['capacity'] <= b:
+                dp[i][b] = max(dp[i][b], 
+                                 dp[i - 1][b - segments[i - 1]['capacity']] + 
+                                 segments[i - 1]['throughput'])
+    
+    return dp[n][total_capacity]
+```
+
+Time complexity: O(n * capacity)
+Space complexity: O(n * capacity) or O(capacity) with optimization
+
+Note: This is a classic resource allocation DP problem. Understand the exact requirements before implementing.

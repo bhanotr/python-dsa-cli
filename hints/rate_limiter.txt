@@ -1,0 +1,126 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use token bucket algorithm for rate limiting
+- Each client (IP) has its own bucket
+- Bucket has max capacity, tokens refill at constant rate
+- Each request consumes 1 token
+- Request allowed if tokens >= 1
+
+Key concepts:
+- Track state per IP: tokens and last_refill_time
+- Calculate refill: time_elapsed * refill_rate
+- Cap tokens at capacity
+- Refill when checking request
+
+Example client state:
+```python
+{
+    "tokens": 5,
+    "last_refill_time": 1234567890.0
+}
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for __init__(capacity, refill_rate):
+1. Store capacity as instance variable
+2. Store refill_rate as instance variable
+3. Initialize empty clients dictionary
+
+Detailed approach for _refill_tokens(client_state, current_time):
+1. Get last_refill_time from client_state
+2. Calculate time_elapsed = current_time - last_refill_time
+3. Calculate tokens_to_add = time_elapsed * refill_rate
+4. Add tokens: client_state["tokens"] += tokens_to_add
+5. Cap at capacity: min(tokens, capacity)
+6. Update last_refill_time = current_time
+
+Detailed approach for allow_request(ip):
+1. Get current time
+2. Check if IP in clients dict
+3. If not, create new client state with full tokens
+4. Call _refill_tokens for this client
+5. Check if tokens >= 1
+6. If yes, decrement tokens and return True
+7. If no, return False
+
+Detailed approach for get_token_count(ip):
+1. Check if IP in clients
+2. If yes, return client["tokens"]
+3. If no, return 0
+
+Edge cases:
+- New IP gets full capacity
+- Tokens cap at capacity
+- Zero refill rate
+- Different IPs independent
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for __init__:
+```python
+def __init__(self, capacity: int, refill_rate: int):
+    self.capacity = capacity
+    self.refill_rate = refill_rate
+    self.clients = {}
+```
+
+Complete solution for _refill_tokens:
+```python
+def _refill_tokens(self, client_state: Dict, current_time: float) -> None:
+    last_time = client_state["last_refill_time"]
+    time_elapsed = current_time - last_time
+    tokens_to_add = time_elapsed * self.refill_rate
+    
+    client_state["tokens"] += tokens_to_add
+    if client_state["tokens"] > self.capacity:
+        client_state["tokens"] = self.capacity
+    
+    client_state["last_refill_time"] = current_time
+```
+
+Complete solution for allow_request:
+```python
+def allow_request(self, ip: str) -> bool:
+    current_time = time.time()
+    
+    if ip not in self.clients:
+        self.clients[ip] = {
+            "tokens": self.capacity,
+            "last_refill_time": current_time
+        }
+    
+    client_state = self.clients[ip]
+    self._refill_tokens(client_state, current_time)
+    
+    if client_state["tokens"] >= 1:
+        client_state["tokens"] -= 1
+        return True
+    return False
+```
+
+Complete solution for get_token_count:
+```python
+def get_token_count(self, ip: str) -> int:
+    if ip not in self.clients:
+        return 0
+    return int(self.clients[ip]["tokens"])
+```
+
+Time complexity:
+- allow_request: O(1)
+- get_token_count: O(1)
+
+Space complexity: O(n) where n is number of unique IPs
+
+The token bucket algorithm provides smooth rate limiting:
+- Allows bursts up to capacity
+- Steady rate over time
+- No bursty behavior

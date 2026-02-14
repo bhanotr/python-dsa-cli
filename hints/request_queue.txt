@@ -1,0 +1,111 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use Python's `collections.deque` for efficient queue operations
+- Deque provides O(1) operations for both ends
+- Queue uses FIFO (First In, First Out) ordering
+- enqueue() adds to back, dequeue() removes from front
+- peek() looks at front without removing
+- is_empty() checks if queue has any items
+
+Key deque methods:
+- deque.append(item) - Add to right (back)
+- deque.popleft() - Remove from left (front)
+- deque[0] - Access first element
+- len(deque) - Get length
+- bool(deque) - Check if empty (False if empty)
+
+Example:
+```python
+from collections import deque
+
+queue = deque()
+queue.append("item")    # enqueue
+item = queue.popleft()  # dequeue
+front = queue[0]        # peek
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for __init__:
+1. Create a deque and store as instance variable
+2. Use `self.queue = deque()`
+
+Detailed approach for enqueue(request):
+1. Append request to the queue
+2. Use `self.queue.append(request)`
+
+Detailed approach for dequeue():
+1. Check if queue is empty (use is_empty or len)
+2. If empty, return None
+3. If not empty, use popleft() to remove and return front item
+
+Detailed approach for peek():
+1. Check if queue is empty
+2. If empty, return None
+3. If not empty, access first element using self.queue[0]
+
+Detailed approach for is_empty():
+1. Return True if len(self.queue) == 0
+2. Or return not bool(self.queue)
+
+Detailed approach for size():
+1. Return len(self.queue)
+
+Edge cases:
+- Dequeuing from empty queue
+- Peeking at empty queue
+- Enqueueing empty strings
+- Large number of items
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for RequestQueue:
+```python
+from collections import deque
+from typing import Optional
+
+class RequestQueue:
+    """FIFO Queue for tracking network requests in order."""
+    
+    def __init__(self):
+        self.queue = deque()
+    
+    def enqueue(self, request: str) -> None:
+        self.queue.append(request)
+    
+    def dequeue(self) -> Optional[str]:
+        if self.is_empty():
+            return None
+        return self.queue.popleft()
+    
+    def peek(self) -> Optional[str]:
+        if self.is_empty():
+            return None
+        return self.queue[0]
+    
+    def is_empty(self) -> bool:
+        return len(self.queue) == 0
+    
+    def size(self) -> int:
+        return len(self.queue)
+```
+
+Time complexity:
+- enqueue: O(1) - amortized
+- dequeue: O(1) - amortized
+- peek: O(1)
+- is_empty: O(1)
+- size: O(1)
+
+Space complexity: O(n) where n is number of items in queue
+
+The deque implementation is optimized for fast append/pop operations at both ends:
+- append/popleft are O(1) amortized
+- This is more efficient than using list.pop(0) which is O(n)

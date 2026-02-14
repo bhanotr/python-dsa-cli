@@ -1,0 +1,121 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use a dictionary to cache DNS entries
+- Each entry stores IP and expiration timestamp
+- When getting an entry, check if it's expired
+- TTL (time-to-live) = entry expires after TTL seconds
+- cleanup() removes all expired entries
+
+Key concepts:
+- Store expiration time as: current_time + ttl
+- Check expiration: expires_at > current_time
+- Use time.time() to get current timestamp
+
+Example structure:
+```python
+cache = {
+    "hostname": {
+        "ip": "192.168.1.1",
+        "expires_at": 1234567890.0
+    }
+}
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for put(hostname, ip, ttl):
+1. Get current time: time.time()
+2. Calculate expiration: expires_at = current_time + ttl
+3. Store entry: self.cache[hostname] = {"ip": ip, "expires_at": expires_at}
+
+Detailed approach for get(hostname):
+1. Check if hostname in cache
+2. Get current time
+3. Get entry from cache
+4. Check if entry["expires_at"] > current_time
+5. If expired, return None
+6. If not expired, return entry["ip"]
+
+Detailed approach for cleanup():
+1. Get current time
+2. Create list of expired hostnames
+3. Iterate through cache items
+4. If expires_at <= current_time, add to expired list
+5. Remove all expired hostnames from cache
+6. Return count of removed entries
+
+Edge cases:
+- Getting from empty cache
+- Getting expired entry
+- Cleanup with no expired entries
+- Overwriting existing entry
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for __init__:
+```python
+def __init__(self):
+    self.cache = {}
+```
+
+Complete solution for put:
+```python
+def put(self, hostname: str, ip: str, ttl: int) -> None:
+    expires_at = time.time() + ttl
+    self.cache[hostname] = {
+        "ip": ip,
+        "expires_at": expires_at
+    }
+```
+
+Complete solution for get:
+```python
+def get(self, hostname: str) -> Optional[str]:
+    if hostname not in self.cache:
+        return None
+    
+    entry = self.cache[hostname]
+    current_time = time.time()
+    
+    if entry["expires_at"] <= current_time:
+        return None
+    
+    return entry["ip"]
+```
+
+Complete solution for cleanup:
+```python
+def cleanup(self) -> int:
+    current_time = time.time()
+    expired = []
+    
+    for hostname, entry in self.cache.items():
+        if entry["expires_at"] <= current_time:
+            expired.append(hostname)
+    
+    for hostname in expired:
+        del self.cache[hostname]
+    
+    return len(expired)
+```
+
+Complete solution for size:
+```python
+def size(self) -> int:
+    return len(self.cache)
+```
+
+Time complexity:
+- put: O(1)
+- get: O(1)
+- cleanup: O(n)
+- size: O(1)
+
+Space complexity: O(n) where n is number of cached entries

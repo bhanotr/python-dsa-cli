@@ -1,0 +1,130 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use Edmonds-Karp algorithm (BFS-based Ford-Fulkerson)
+- Find augmenting paths in residual graph using BFS
+- For each path, find bottleneck (minimum capacity)
+- Update residual capacities: subtract flow forward, add flow backward
+- Sum of all bottleneck flows = max flow
+
+Key concepts:
+- Residual graph tracks remaining capacity
+- BFS finds shortest augmenting path
+- Update both forward and reverse edges
+- Stop when no more augmenting paths exist
+
+Example residual update:
+```python
+# For edge u->v with flow f
+residual[u][v] -= f
+residual[v][u] += f
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for bfs_find_path:
+1. Initialize visited = [False] * n
+2. Initialize queue with source
+3. Mark source as visited
+4. While queue not empty:
+   a. Pop node u
+   b. For each neighbor v:
+      - If not visited and residual[u][v] > 0:
+        * Mark visited
+        * Set parent[v] = u
+        * Add v to queue
+        * If v is sink, return True
+5. Return False
+
+Detailed approach for max_flow_edmonds_karp:
+1. Create residual graph as deep copy
+2. Initialize parent array
+3. max_flow = 0
+4. While bfs_find_path returns True:
+   a. Find bottleneck: min capacity along path
+   b. Starting from sink, follow parents to source
+   c. For each edge u->v in path:
+      - residual[u][v] -= bottleneck
+      - residual[v][u] += bottleneck
+   d. max_flow += bottleneck
+5. Return max_flow
+
+Detailed approach for finding bottleneck:
+- Start with sink
+- Follow parent pointers to source
+- Find minimum residual[u][v] along path
+
+Edge cases:
+- No path exists
+- Source equals sink
+- Single edge
+- Multiple paths
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for bfs_find_path:
+```python
+def bfs_find_path(graph: List[List[int]], parent: List[int], source: int, sink: int) -> bool:
+    n = len(graph)
+    visited = [False] * n
+    queue = deque()
+    queue.append(source)
+    visited[source] = True
+    parent[source] = -1
+    
+    while queue:
+        u = queue.popleft()
+        for v in range(n):
+            if not visited[v] and graph[u][v] > 0:
+                visited[v] = True
+                parent[v] = u
+                queue.append(v)
+                if v == sink:
+                    return True
+    return False
+```
+
+Complete solution for max_flow_edmonds_karp:
+```python
+def max_flow_edmonds_karp(graph: List[List[int]], source: int, sink: int) -> int:
+    n = len(graph)
+    residual = [row[:] for row in graph]  # Deep copy
+    parent = [-1] * n
+    max_flow = 0
+    
+    while bfs_find_path(residual, parent, source, sink):
+        # Find bottleneck
+        path_flow = float('inf')
+        v = sink
+        while v != source:
+            u = parent[v]
+            path_flow = min(path_flow, residual[u][v])
+            v = u
+        
+        # Update residual capacities
+        v = sink
+        while v != source:
+            u = parent[v]
+            residual[u][v] -= path_flow
+            residual[v][u] += path_flow
+            v = u
+        
+        max_flow += path_flow
+    
+    return max_flow
+```
+
+Time complexity: O(V * E^2)
+- Each BFS: O(E)
+- O(VE) augmentations in worst case
+- Each augmentation can update O(E) edges
+
+Space complexity: O(V^2)
+- Residual graph: O(V^2)
+- Parent array: O(V)

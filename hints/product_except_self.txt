@@ -1,0 +1,100 @@
+=== HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Calculate prefix products (product of all elements before)
+- Calculate suffix products (product of all elements after)
+- Multiply prefix and suffix for each position
+
+Key concept:
+- Prefix[i] = product of all elements before index i
+- Suffix[i] = product of all elements after index i
+- Answer[i] = Prefix[i] * Suffix[i]
+
+Prefix example:
+```python
+nums = [1, 2, 3, 4]
+prefix = [1, 1, 2, 6]
+# prefix[0] = 1 (nothing before)
+# prefix[1] = 1 (1)
+# prefix[2] = 2 (1*2)
+# prefix[3] = 6 (1*2*3)
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for product_except_self():
+Method 1: Two arrays
+1. Create answer array with all 1s
+2. First pass (left to right): calculate prefix products
+3. Second pass (right to left): multiply by suffix products
+
+Example:
+```python
+nums = [1, 2, 3, 4]
+
+First pass (prefix):
+answer = [1, 1, 2, 6]
+
+Second pass (suffix, running product):
+suffix = 1
+i=3: answer[3] = 6 * 1 = 6, suffix = 4
+i=2: answer[2] = 2 * 4 = 8, suffix = 12
+i=1: answer[1] = 1 * 12 = 12, suffix = 24
+i=0: answer[0] = 1 * 24 = 24, suffix = 48
+
+answer = [24, 12, 8, 6]
+```
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution (space-optimized):
+```python
+from typing import List
+
+def product_except_self(nums: List[int]) -> List[int]:
+    n = len(nums)
+    answer = [1] * n
+    
+    # Pass 1: Calculate prefix products
+    prefix = 1
+    for i in range(n):
+        answer[i] = prefix
+        prefix *= nums[i]
+    
+    # Pass 2: Multiply by suffix products
+    suffix = 1
+    for i in range(n - 1, -1, -1):
+        answer[i] *= suffix
+        suffix *= nums[i]
+    
+    return answer
+```
+
+Time complexity: O(n) - Two passes
+Space complexity: O(1) extra (excluding output array)
+
+Alternative (with two arrays):
+```python
+def product_except_self(nums: List[int]) -> List[int]:
+    n = len(nums)
+    prefix = [1] * n
+    suffix = [1] * n
+    
+    # Calculate prefix
+    for i in range(1, n):
+        prefix[i] = prefix[i-1] * nums[i-1]
+    
+    # Calculate suffix
+    for i in range(n-2, -1, -1):
+        suffix[i] = suffix[i+1] * nums[i+1]
+    
+    # Multiply
+    return [prefix[i] * suffix[i] for i in range(n)]
+```
+This uses O(n) extra space.

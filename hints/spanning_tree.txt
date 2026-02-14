@@ -1,0 +1,96 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use Prim's algorithm for Minimum Spanning Tree
+- Start from any node, greedily add minimum weight edges
+- Use priority queue (heapq) to always get minimum weight edge
+- Track visited nodes to avoid cycles
+- Sum weights of edges added to MST
+
+Key concepts:
+- Visited set to track nodes in MST
+- Priority queue stores (weight, from_node, to_node)
+- Only add edges to unvisited nodes
+- Stop when all nodes visited or queue empty
+
+Example priority queue usage:
+```python
+import heapq
+heap = []
+heapq.heappush(heap, (weight, from_node, to_node))
+min_edge = heapq.heappop(heap)
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for mst_prim(graph, start):
+1. Initialize visited = set()
+2. Initialize total_weight = 0
+3. Create priority queue
+4. Add start node's edges to queue (0, start, neighbor, weight)
+5. While queue not empty:
+   a. Pop min weight edge
+   b. If to_node not in visited:
+      - Add to_node to visited
+      - Add weight to total_weight
+      - Add all edges from to_node to queue
+6. Return total_weight
+
+Detailed approach:
+- Use heapq for priority queue
+- Push (weight, from_node, to_node) for each edge
+- Pop to get minimum weight edge
+- Only process if to_node not visited
+- Add all edges from new node to queue
+
+Edge cases:
+- Empty graph
+- Single node
+- Disconnected components
+- Different start nodes
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for mst_prim:
+```python
+def mst_prim(graph: Dict[int, List[Tuple[int, int]]], start: int) -> int:
+    if not graph:
+        return 0
+    
+    visited = set()
+    total_weight = 0
+    heap = []
+    
+    # Add edges from start node
+    for neighbor, weight in graph.get(start, []):
+        heapq.heappush(heap, (weight, start, neighbor))
+    
+    visited.add(start)
+    
+    while heap and len(visited) < len(graph):
+        weight, from_node, to_node = heapq.heappop(heap)
+        
+        if to_node not in visited:
+            visited.add(to_node)
+            total_weight += weight
+            
+            for neighbor, edge_weight in graph.get(to_node, []):
+                if neighbor not in visited:
+                    heapq.heappush(heap, (edge_weight, to_node, neighbor))
+    
+    return total_weight
+```
+
+Time complexity: O(E log V)
+- Each edge pushed/popped from heap: O(log E)
+- V iterations in worst case
+
+Space complexity: O(V + E)
+- Visited set: O(V)
+- Priority queue: O(E) worst case

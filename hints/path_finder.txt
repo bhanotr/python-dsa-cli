@@ -1,0 +1,102 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use DFS with backtracking to find all paths
+- Track current path and visited nodes
+- When reaching target, record the path
+- Backtrack by removing node from path
+- Continue exploring other neighbors
+
+Key concepts:
+- Recursive DFS explores all possibilities
+- Track visited in current path (not global visited)
+- Add node to path before recursing
+- Remove node from path after recursing (backtrack)
+- Record path when end node reached
+
+Example backtracking:
+```python
+path = [start]
+visited = {start}
+# Recurse on neighbor
+path.append(neighbor)
+visited.add(neighbor)
+# After recursion
+path.pop()
+visited.remove(neighbor)
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for find_all_paths:
+1. Initialize result = []
+2. Define dfs(current, path, visited):
+   a. Add current to path and visited
+   b. If current == end:
+      - Add copy of path to result
+   c. Otherwise:
+      - For each neighbor of current:
+        - If neighbor not in visited:
+          - Recurse dfs(neighbor, path, visited)
+   d. Remove current from path and visited (backtrack)
+
+Detailed approach:
+- Use list for current path
+- Use set for visited nodes in path
+- Copy path when adding to result: path.copy()
+- Recursion builds path incrementally
+- Backtrack to explore other branches
+
+Edge cases:
+- Start equals end (single node path)
+- No path exists
+- Graph with cycles
+- Multiple paths
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for find_all_paths:
+```python
+def find_all_paths(graph: Dict[int, List[int]], start: int, end: int) -> List[List[int]]:
+    result = []
+    
+    def dfs(current: int, path: List[int], visited: Set[int]):
+        path.append(current)
+        visited.add(current)
+        
+        if current == end:
+            result.append(path.copy())
+        else:
+            for neighbor in graph.get(current, []):
+                if neighbor not in visited:
+                    dfs(neighbor, path, visited)
+        
+        # Backtrack
+        path.pop()
+        visited.remove(current)
+    
+    dfs(start, [], set())
+    return result
+```
+
+Time complexity: O((V + E) * P)
+- V vertices, E edges, P paths
+- Each DFS explores all edges
+- Each path is recorded separately
+
+Space complexity: O(V)
+- Recursion depth: O(V)
+- Path storage: O(V)
+- Visited set: O(V)
+
+Backtracking works by:
+1. Making a choice (add node to path)
+2. Recursively exploring
+3. Undoing the choice (remove from path)
+This allows exploring all possibilities.

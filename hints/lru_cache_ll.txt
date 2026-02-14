@@ -1,0 +1,157 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Use a doubly linked list to track usage order (head = most recent, tail = least recent)
+- Use a hash map for O(1) access to nodes by key
+- Dummy head and tail nodes simplify edge cases
+- _remove_node(): Update prev and next pointers
+- _add_to_head(): Insert node right after head
+- _move_to_head(): Remove from current position, add to head
+- _pop_tail(): Remove and return the node before tail
+
+Key operations:
+- get(key): Check hash map, if exists move node to head
+- put(key, value): If exists, update and move to head. If new, add to head, check capacity, evict tail if needed
+
+Example node structure:
+```python
+class DLinkedNode:
+    def __init__(self, key=0, value=0):
+        self.key = key
+        self.value = value
+        self.prev = None
+        self.next = None
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for _remove_node(node):
+1. Get node.prev and node.next
+2. Set node.prev.next = node.next
+3. Set node.next.prev = node.prev
+
+Detailed approach for _add_to_head(node):
+1. Get head.next
+2. Set node.prev = head
+3. Set node.next = head.next
+4. Set head.next.prev = node
+5. Set head.next = node
+
+Detailed approach for _move_to_head(node):
+1. Call _remove_node(node)
+2. Call _add_to_head(node)
+
+Detailed approach for _pop_tail():
+1. Get the node before tail (tail.prev)
+2. Remove it using _remove_node
+3. Return it
+
+Detailed approach for get(key):
+1. If key not in cache, return None
+2. Get node from cache[key]
+3. Call _move_to_head(node) to mark as recently used
+4. Return node.value
+
+Detailed approach for put(key, value):
+1. If key exists:
+   - Update node.value = value
+   - Call _move_to_head(node)
+2. If key doesn't exist:
+   - Create new DLinkedNode(key, value)
+   - Call _add_to_head(node)
+   - Add to cache: cache[key] = node
+   - If len(cache) > capacity:
+     - Call _pop_tail() to get LRU node
+     - Delete from cache: del cache[lru.key]
+
+Edge cases:
+- Cache is empty
+- Key doesn't exist when getting
+- Updating existing key vs adding new key
+- Eviction when at capacity
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for DLinkedNode:
+```python
+class DLinkedNode:
+    def __init__(self, key: int = 0, value: str = ""):
+        self.key = key
+        self.value = value
+        self.prev = None
+        self.next = None
+```
+
+Complete solution for LRUCache __init__:
+```python
+def __init__(self, capacity: int):
+    self.capacity = capacity
+    self.cache = {}
+    self.head = DLinkedNode()
+    self.tail = DLinkedNode()
+    self.head.next = self.tail
+    self.tail.prev = self.head
+```
+
+Complete solution for helper methods:
+```python
+def _remove_node(self, node: DLinkedNode):
+    prev_node = node.prev
+    next_node = node.next
+    prev_node.next = next_node
+    next_node.prev = prev_node
+
+def _add_to_head(self, node: DLinkedNode):
+    node.prev = self.head
+    node.next = self.head.next
+    self.head.next.prev = node
+    self.head.next = node
+
+def _move_to_head(self, node: DLinkedNode):
+    self._remove_node(node)
+    self._add_to_head(node)
+
+def _pop_tail(self) -> Optional[DLinkedNode]:
+    lru = self.tail.prev
+    self._remove_node(lru)
+    return lru
+```
+
+Complete solution for get:
+```python
+def get(self, key: int) -> str | None:
+    if key not in self.cache:
+        return None
+    node = self.cache[key]
+    self._move_to_head(node)
+    return node.value
+```
+
+Complete solution for put:
+```python
+def put(self, key: int, value: str) -> None:
+    if key in self.cache:
+        node = self.cache[key]
+        node.value = value
+        self._move_to_head(node)
+    else:
+        node = DLinkedNode(key, value)
+        self._add_to_head(node)
+        self.cache[key] = node
+        
+        if len(self.cache) > self.capacity:
+            lru = self._pop_tail()
+            del self.cache[lru.key]
+```
+
+Time complexity:
+- get: O(1) - hash map lookup + constant time list operations
+- put: O(1) - hash map operations + constant time list operations
+
+Space complexity: O(capacity) - stores at most capacity items

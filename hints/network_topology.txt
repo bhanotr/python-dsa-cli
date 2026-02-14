@@ -1,0 +1,142 @@
+1: === HINT LEVEL ===
+
+Hint Level 1:
+
+General approach:
+- Binary tree with BST ordering: left < root < right
+- Recursion for traversals
+- Use helper functions for recursive operations
+- Track depth by max of left and right subtree depths
+
+Key concepts:
+- Insert: compare with root, go left or right
+- Find: compare with root, go left or right
+- In-order: Left, Root, Right (gives sorted order)
+- Pre-order: Root, Left, Right
+- Post-order: Left, Right, Root
+
+Example BST insertion:
+```python
+if device_id < node.device_id:
+    # Go to left subtree
+else:
+    # Go to right subtree
+```
+
+=== HINT LEVEL ===
+
+Hint Level 2:
+
+Detailed approach for insert:
+1. Create new TreeNode with device_id and ip
+2. If root is None, set root to new node
+3. Otherwise, find position:
+   - Start at root
+   - While current is not None:
+     - If device_id < current.device_id:
+       - If current.left is None: insert and return
+       - Else: move to current.left
+     - Else:
+       - If current.right is None: insert and return
+       - Else: move to current.right
+
+Detailed approach for find:
+1. Start at root
+2. While node is not None:
+   - If device_id == node.device_id: return node
+   - If device_id < node.device_id: node = node.left
+   - Else: node = node.right
+3. Return None (not found)
+
+Detailed approach for traversals:
+- Create helper function that takes node and result list
+- In-order: recurse left, add node, recurse right
+- Pre-order: add node, recurse left, recurse right
+- Post-order: recurse left, recurse right, add node
+
+Detailed approach for depth:
+- Base case: if node is None, return 0
+- Recursive: return 1 + max(depth(left), depth(right))
+
+Edge cases:
+- Empty tree
+- Single node
+- Duplicate device_ids (handle as greater)
+- Left-skewed or right-skewed tree
+
+=== HINT LEVEL ===
+
+Hint Level 3:
+
+Complete solution for insert:
+```python
+def insert(self, device_id: int, ip: str) -> None:
+    new_node = TreeNode(device_id, ip)
+    
+    if self.root is None:
+        self.root = new_node
+        return
+    
+    current = self.root
+    while current:
+        if device_id < current.device_id:
+            if current.left is None:
+                current.left = new_node
+                return
+            current = current.left
+        else:
+            if current.right is None:
+                current.right = new_node
+                return
+            current = current.right
+```
+
+Complete solution for find:
+```python
+def find(self, device_id: int) -> Optional[TreeNode]:
+    current = self.root
+    while current:
+        if device_id == current.device_id:
+            return current
+        elif device_id < current.device_id:
+            current = current.left
+        else:
+            current = current.right
+    return None
+```
+
+Complete solution for inorder traversal:
+```python
+def _inorder_helper(self, node: Optional[TreeNode], result: List[Tuple[int, str]]) -> None:
+    if node is None:
+        return
+    self._inorder_helper(node.left, result)
+    result.append((node.device_id, node.ip))
+    self._inorder_helper(node.right, result)
+
+def inorder_traversal(self) -> List[Tuple[int, str]]:
+    result = []
+    self._inorder_helper(self.root, result)
+    return result
+```
+
+Complete solution for depth:
+```python
+def _get_depth_helper(self, node: Optional[TreeNode]) -> int:
+    if node is None:
+        return 0
+    return 1 + max(self._get_depth_helper(node.left), self._get_depth_helper(node.right))
+
+def get_depth(self) -> int:
+    return self._get_depth_helper(self.root)
+```
+
+Time complexity:
+- insert: O(h) where h is tree height (O(log n) balanced, O(n) worst)
+- find: O(h)
+- traversals: O(n) - visit all nodes
+- get_depth: O(n)
+
+Space complexity:
+- O(n) for storing tree
+- O(h) for recursion stack
