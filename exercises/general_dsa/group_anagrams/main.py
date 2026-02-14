@@ -11,11 +11,10 @@ def group_anagrams(strs: List[str]) -> List[List[str]]:
     Returns:
         List of groups where each group contains anagrams
     """
-    # TODO: Implement group_anagrams
-    # 1. Create a hash map to store groups
-    # 2. Use sorted string as key for each anagram group
-    # 3. Group strings with the same sorted key
-    # 4. Return all groups as a list
+    # THINK: What makes two strings anagrams of each other?
+    # - Anagrams have the same characters (same frequency, same letters)
+    # - If we sort them, they become identical!
+    # - Key insight: Use sorted string as hash map key
     pass
 
 

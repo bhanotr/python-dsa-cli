@@ -3,7 +3,7 @@ from typing import List
 
 def two_sum(nums: List[int], target: int) -> List[int]:
     """
-    Find two numbers in the array that add up to the target.
+    Find two numbers in the array that add up to target.
 
     Args:
         nums: List of integers
@@ -12,11 +12,11 @@ def two_sum(nums: List[int], target: int) -> List[int]:
     Returns:
         List of two indices whose elements sum to target
     """
-    # TODO: Implement two_sum
-    # 1. Use a hash map to store {number: index}
-    # 2. For each number, calculate complement = target - number
-    # 3. Check if complement exists in hash map
-    # 4. Return the indices when found
+    # THINK: What approach could work here?
+    # - Brute force: Check all pairs (O(n²))
+    # - Better: Could we remember what we've seen? (O(n))
+    # - Key insight: If we're looking for target T and see number X,
+    #   we're also looking for (T - X)
     pass
 
 

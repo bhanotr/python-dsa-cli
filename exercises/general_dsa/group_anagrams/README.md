@@ -85,6 +85,21 @@ sorted_str = ''.join(sorted("eat"))  # "aet"
 ## Space Complexity
 - **Both approaches**: O(n * k) - Store all strings in hash map
 
+## Learning Resources
+
+Study these before attempting to solve:
+- **LeetCode 49 (Group Anagrams)** - Read problem and discussion: https://leetcode.com/problems/group-anagrams/
+- **NeetCode Video** - Hash map grouping explained: https://www.youtube.com/watch?v=vzdNOD2A_fM
+- **Hash Tables Guide** - Understanding when and how to use them: https://leetcode.com/discuss/study-guide/5/
+- **String Sorting Pattern** - Key technique for anagrams: Search "sorted string as hash key leetcode"
+
+### Concept Questions to Consider
+- **What defines an anagram?** - Same letters, same frequency, different order
+- **Why sort strings?** - What makes sorted strings equal for anagrams?
+- **Is sorting efficient?** - What if strings are very long?
+- **Can we avoid sorting?** - What if we counted characters instead? (Trie approach)
+- **Hash map trade-offs** - We're using extra memory - is it worth O(1) lookups?
+
 ## Why This Is Important
 - Pattern for grouping similar items
 - Hash map with composite keys

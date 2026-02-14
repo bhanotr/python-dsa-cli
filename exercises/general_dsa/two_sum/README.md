@@ -86,6 +86,20 @@ dsa hint two_sum [1|2|3]
 - **Brute Force**: O(1) - No extra space
 - **Hash Map**: O(n) - Store up to n elements
 
+## Learning Resources
+
+Study these before attempting to solve:
+- **LeetCode 1 (Two Sum)** - Read problem and discussion: https://leetcode.com/problems/two-sum/
+- **NeetCode Video** - Excellent explanation: https://www.youtube.com/watch?v=KLlX8kIbM0
+- **Hash Tables Guide** - Understand when and why to use: https://leetcode.com/discuss/study-guide/5/
+- **Complement Pattern** - Key algorithmic insight: Search "two sum complement pattern"
+
+### Concept Questions to Consider
+- **Why O(n²) is bad**: What happens if input size is very large?
+- **What makes O(n) possible**: How can we remember what we've seen?
+- **The "aha!" moment**: If we need X to reach target T, we're also looking for (T - X)
+- **Hash map trade-off**: We're using extra memory - is it worth it?
+
 ## Why This Is Important
 - Foundation for many hash map problems
 - Understanding complement pattern

@@ -97,6 +97,21 @@ return cleaned == cleaned[::-1]
 - **Two pointer**: O(1) - No extra space
 - **Clean and compare**: O(n) - Store cleaned string
 
+## Learning Resources
+
+Study these before attempting to solve:
+- **LeetCode 125 (Valid Palindrome)** - Read problem and discussion: https://leetcode.com/problems/valid-palindrome/
+- **Two Pointer Technique Guide** - Comprehensive explanation: https://leetcode.com/discuss/general/46565/
+- **NeetCode Video** - Excellent visual explanation: https://www.youtube.com/watch?v=jJRXJqtkmQ
+- **Two Pointers Pattern** - Master the fundamental technique: Search "two pointers algorithm leetcode"
+
+### Concept Questions to Consider
+- **Why two pointers?** - What problem does this solve that single pointer can't?
+- **What if we used reversed string?** - How would that affect space complexity?
+- **Case insensitivity** - Why do we need to handle this?
+- **Non-alphanumeric chars** - What edge cases can this introduce?
+- **Space vs time trade-off** - Can we solve in O(1) space instead of O(n)?
+
 ## Why This Is Important
 - Two pointer pattern is fundamental
 - String manipulation skills

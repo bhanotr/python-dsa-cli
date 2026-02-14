@@ -8,11 +8,10 @@ def is_palindrome(s: str) -> bool:
     Returns:
         True if palindrome, False otherwise
     """
-    # TODO: Implement is_palindrome
-    # 1. Use two pointers (left and right)
-    # 2. Skip non-alphanumeric characters
-    # 3. Compare characters (case-insensitive)
-    # 4. Return True if all pairs match
+    # THINK: How do we check if something reads the same forwards and backwards?
+    # - Naive: Reverse the whole string and compare (O(n) space)
+    # - Better: Compare first half with second half (O(1) space)
+    # - How to compare? Two pointers moving towards each other!
     pass
 
 
