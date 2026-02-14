@@ -8,10 +8,6 @@ def is_palindrome(s: str) -> bool:
     Returns:
         True if palindrome, False otherwise
     """
-    # THINK: How do we check if something reads the same forwards and backwards?
-    # - Naive: Reverse the whole string and compare (O(n) space)
-    # - Better: Compare first half with second half (O(1) space)
-    # - How to compare? Two pointers moving towards each other!
     pass
 
 

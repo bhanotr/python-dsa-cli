@@ -11,10 +11,6 @@ def max_profit(prices: List[int]) -> int:
     Returns:
         Maximum profit achievable (0 if no profit possible)
     """
-    # TODO: Implement max_profit
-    # 1. Track minimum price seen so far
-    # 2. Calculate potential profit at each day
-    # 3. Return the maximum profit found
     pass
 
 
